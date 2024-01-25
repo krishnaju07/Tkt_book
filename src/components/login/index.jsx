@@ -2,6 +2,7 @@ import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Button, Grid, Typography, TextField } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 // import { useHistory, useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object().shape({
@@ -21,12 +22,12 @@ const initialValues = {
 };
 
 export default function Index() {
-  // let navigate = useNavigate();
+  let navigate = useNavigate();
 
 
   const handleSubmit = (values) => {
     console.log("Form submitted", values);
-    // navigate("/seatbooking");
+    navigate("/seatbooking");
   };
 
   return (
