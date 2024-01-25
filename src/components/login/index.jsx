@@ -15,7 +15,7 @@ export default function Index() {
   };
 
   const handleSubmit = () => {
-    console.log("Form submitted");
+    console.log("Form submittedsss");
   };
 
   return (
