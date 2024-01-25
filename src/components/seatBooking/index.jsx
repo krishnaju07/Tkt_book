@@ -14,10 +14,20 @@ import {
 } from "@mui/material";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 
-const moviesList = ["The Godfather", "Pulp Fiction"];
+const moviesList = [
+  { title: "Singapore Saloon(200)", price: 200 },
+  { title: "Leo(100)", price: 100 }
+];
 
 export default function Index() {
   const [selectedSeats, setSelectedSeats] = useState([]);
+  const [occupiedSeats, setoccupiedSeats] = useState([])
+
+function sumtktprice() {
+  let finalvalue = 0
+  const sum = selectedSeats.length * moviesList[0].price
+  return sum
+}
 
   const totalRows = 6;
   const seatsPerRow = 8;
@@ -36,6 +46,15 @@ export default function Index() {
       }
     });
   };
+  
+  const handleBookClick = () => {
+    setOccupiedSeats((prevOccupiedSeats) => [
+      ...prevOccupiedSeats,
+      ...selectedSeats,
+    ]);
+    setSelectedSeats([]);
+  };
+
 
   console.log("sososososs", seats);
   return (
@@ -46,7 +65,7 @@ export default function Index() {
           <Autocomplete
             disablePortal
             id="combo-box-demo"
-            options={moviesList}
+            options={moviesList.map(movie => movie.title)}
             fullWidth
             renderInput={(params) => (
               <TextField {...params} label="Movie" fullWidth />
@@ -103,11 +122,11 @@ export default function Index() {
         </Grid>
 
         <Grid item xs={12}>
-          <Typography variant="h7">{`You have Selected ${selectedSeats} for a price of `}</Typography>
+          <Typography variant="h7">{`You have Selected ${selectedSeats.length || 0} for a price of ${sumtktprice()}`}</Typography>
         </Grid>
 
         <Grid item xs={12}>
-          <Button variant="contained">Book</Button>
+          <Button variant="contained" onClick={handleBookClick}>Book</Button>
         </Grid>
       </Grid>
     </>
