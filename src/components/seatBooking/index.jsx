@@ -119,16 +119,16 @@ export default function Index() {
             <List sx={{ display: "flex", flexDirection: "row" }}>
               <ListItem>
                 <CheckBoxOutlineBlankIcon
-                  sx={{ color: "white", backgroundColor: "gray" }}
+                  sx={{ color: "white", backgroundColor: "#e4e6d5" }}
                 />
                 <ListItemText primary="N/A" />
               </ListItem>
               <ListItem>
-                <CheckBoxOutlineBlankIcon sx={{ color: "green" }} />
+                <CheckBoxOutlineBlankIcon sx={{ color: "#3480ba" }} />
                 <ListItemText primary="Selected" />
               </ListItem>
               <ListItem>
-                <CheckBoxOutlineBlankIcon sx={{ color: "black" }} />
+                <CheckBoxOutlineBlankIcon sx={{ color: "lightblack",backgroundColor:'lightgray' }} />
                 <ListItemText primary="Occupied" />
               </ListItem>
             </List>
