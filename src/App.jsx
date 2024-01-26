@@ -5,7 +5,7 @@ import './App.css'
 import Login from '../src/components/login'
 import SeatBooking from '../src/components/seatBooking/'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { SpeedInsights } from "@vercel/speed-insights/next"
+
 
 const router = createBrowserRouter([
   {
@@ -24,7 +24,6 @@ function App() {
     <>
     <div>
     <RouterProvider router={router} />
-    <SpeedInsights/>
     </div>
     </>
   )
