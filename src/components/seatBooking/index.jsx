@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Autocomplete,
   Grid,
@@ -19,25 +19,46 @@ const moviesList = [
   { title: "Leo(100)", price: 100 },
 ];
 
+const totalRows = 6;
+const seatsPerRow = 8;
+
+const generateSeats = () =>
+  Array.from({ length: totalRows * seatsPerRow }, (_, index) => index + 1);
+
 export default function Index() {
   const [selectedSeats, setSelectedSeats] = useState([]);
-  const [occupiedSeats, setoccupiedSeats] = useState([]);
+  const [occupiedSeats, setOccupiedSeats] = useState({});
+  const [currentMovie, setCurrentMovie] = useState(null);
+  const [seats, setSeats] = useState(generateSeats());
+  const [errorMessage, setErrorMessage] = useState("");
 
-  function sumtktprice() {
-    let finalvalue = 0;
-    const sum = selectedSeats.length * moviesList[0].price;
-    return sum;
-  }
+  useEffect(() => {
+    // Reset selected seats when movie changes
+    setSelectedSeats([]);
+    // Update seats based on the selected movie
+    setSeats(generateSeats());
+    // Clear error message when movie changes
+    setErrorMessage("");
+  }, [currentMovie]);
 
-  const totalRows = 6;
-  const seatsPerRow = 8;
+  const sumTicketPrice = () => {
+    return selectedSeats.length * (currentMovie ? currentMovie.price : 0);
+  };
 
-  const seats = Array.from(
-    { length: totalRows * seatsPerRow },
-    (_, index) => index + 1
-  );
+  const isSeatOccupied = (seatNumber) =>
+    occupiedSeats[currentMovie?.title]?.includes(seatNumber) || false;
 
   const handleSeatClick = (seatNumber) => {
+    if (!currentMovie) {
+      setErrorMessage("Please select a movie first.");
+      return;
+    }
+
+    if (isSeatOccupied(seatNumber)) {
+      // Seat is occupied for the current movie, handle accordingly
+      return;
+    }
+
     setSelectedSeats((prevSelectedSeats) => {
       if (prevSelectedSeats.includes(seatNumber)) {
         return prevSelectedSeats.filter((seat) => seat !== seatNumber);
@@ -45,17 +66,30 @@ export default function Index() {
         return [...prevSelectedSeats, seatNumber];
       }
     });
+
+    // Clear error message
+    setErrorMessage("");
   };
 
   const handleBookClick = () => {
-    setOccupiedSeats((prevOccupiedSeats) => [
+    if (!currentMovie) {
+      setErrorMessage("Please select a movie first.");
+      return;
+    }
+
+    setOccupiedSeats((prevOccupiedSeats) => ({
       ...prevOccupiedSeats,
-      ...selectedSeats,
-    ]);
+      [currentMovie?.title]: [
+        ...(prevOccupiedSeats[currentMovie?.title] || []),
+        ...selectedSeats,
+      ],
+    }));
+
     setSelectedSeats([]);
+    // Clear error message
+    setErrorMessage("");
   };
 
-  console.log("sososososs", seats);
   return (
     <>
       <Grid container spacing={2}>
@@ -64,13 +98,24 @@ export default function Index() {
           <Autocomplete
             disablePortal
             id="combo-box-demo"
-            options={moviesList.map((movie) => movie.title)}
+            options={moviesList}
+            getOptionLabel={(option) => option.title}
+            onChange={(event, newValue) => setCurrentMovie(newValue)}
+            value={currentMovie}
             fullWidth
             renderInput={(params) => (
               <TextField {...params} label="Movie" fullWidth />
             )}
           />
         </Grid>
+
+        {errorMessage && (
+          <Grid item xs={12}>
+            <Typography variant="body2" color="error">
+              {errorMessage}
+            </Typography>
+          </Grid>
+        )}
 
         <Grid item xs={12}>
           <Paper>
@@ -106,13 +151,19 @@ export default function Index() {
                   }}
                 >
                   <Checkbox
-                    checked={selectedSeats.includes(seatNumber)}
+                    checked={
+                      selectedSeats.includes(seatNumber) ||
+                      isSeatOccupied(seatNumber)
+                    }
                     onChange={() => handleSeatClick(seatNumber)}
                     sx={{
                       color: selectedSeats.includes(seatNumber)
                         ? "green"
-                        : "black",
+                        : isSeatOccupied(seatNumber)
+                        ? "black"
+                        : "default",
                     }}
+                    disabled={isSeatOccupied(seatNumber)}
                   />
                 </ListItem>
               ))}
@@ -123,7 +174,7 @@ export default function Index() {
         <Grid item xs={12}>
           <Typography variant="h7">{`You have Selected ${
             selectedSeats.length || 0
-          } for a price of ${sumtktprice()}`}</Typography>
+          } for a price of ${sumTicketPrice()}`}</Typography>
         </Grid>
 
         <Grid item xs={12}>
