@@ -17,6 +17,7 @@ import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 const moviesList = [
   { title: "Singapore Saloon(200)", price: 200 },
   { title: "Leo(100)", price: 100 },
+  {title : "Jailer(150)" ,price : 150}
 ];
 
 const totalRows = 6;
@@ -32,12 +33,11 @@ export default function Index() {
   const [seats, setSeats] = useState(generateSeats());
   const [errorMessage, setErrorMessage] = useState("");
 
+  console.log(currentMovie,selectedSeats,occupiedSeats);
+
   useEffect(() => {
-    // Reset selected seats when movie changes
     setSelectedSeats([]);
-    // Update seats based on the selected movie
     setSeats(generateSeats());
-    // Clear error message when movie changes
     setErrorMessage("");
   }, [currentMovie]);
 
@@ -55,7 +55,6 @@ export default function Index() {
     }
 
     if (isSeatOccupied(seatNumber)) {
-      // Seat is occupied for the current movie, handle accordingly
       return;
     }
 
@@ -67,7 +66,6 @@ export default function Index() {
       }
     });
 
-    // Clear error message
     setErrorMessage("");
   };
 
@@ -86,7 +84,6 @@ export default function Index() {
     }));
 
     setSelectedSeats([]);
-    // Clear error message
     setErrorMessage("");
   };
 
